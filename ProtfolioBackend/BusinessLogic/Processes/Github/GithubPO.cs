@@ -15,7 +15,7 @@ namespace ProtfolioBackend.BusinessLogic.Processes.Github
         Task<dtoGithubReadMe> getReadMe();
     }
 
-    public class GithubPO : ControllerBase, IGitHub
+    public class GithubPO : IGitHub
     {
         private readonly IHttpClientFactory _clientFactory;
         dtoGithubReadMe dtoReadMe;

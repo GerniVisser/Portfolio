@@ -27,11 +27,6 @@ namespace ProtfolioBackend.Controllers
             _github = github;
         }
 
-        public string Index()
-        {
-            return "This is my default action...";
-        }
-
         [Route("Get")]
         [HttpGet]
         public async Task<ActionResult<dtoGithubReadMe>> Get()
