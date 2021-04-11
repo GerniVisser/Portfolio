@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProtfolioBackend.Controllers;
-using ProtfolioBackend.Models.dto;
+using ProtfolioBackend.Models.data;
 using System;
 using System.Collections.Generic;
 using System.Linq;

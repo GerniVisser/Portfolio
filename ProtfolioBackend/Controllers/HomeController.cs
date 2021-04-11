@@ -8,13 +8,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ProtfolioBackend.BusinessLogic.Processes.Github;
-using ProtfolioBackend.Models;
-using ProtfolioBackend.Models.dto;
+using ProtfolioBackend.Models.data;
 
 namespace ProtfolioBackend.Controllers
 {
     [ApiController]
-    [Route("Home")]
+    [Route("api/[]")]
     public class HomeController : ControllerBase
     {
         private IGitHub _github;
