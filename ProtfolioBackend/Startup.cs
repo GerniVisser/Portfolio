@@ -29,6 +29,7 @@ namespace ProtfolioBackend
         {
             services.AddControllers();
             services.AddHttpClient();
+            services.AddCors();
             services.AddDbContext<DataContext>(options =>
             {
                 options.UseSqlite(_config.GetConnectionString("DefaultConnection"));
@@ -53,6 +54,8 @@ namespace ProtfolioBackend
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseCors(pol => pol.AllowAnyHeader().AllowAnyMethod().WithOrigins("hhtps://localhost/4200")); 
 
             app.UseAuthorization();
 
