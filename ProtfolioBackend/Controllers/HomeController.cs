@@ -2,36 +2,48 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using ProtfolioBackend.Models;
+using ProtfolioBackend.BusinessLogic.Processes.Github;
+using ProtfolioBackend.Models.data;
+using ProtfolioBackend.Models.Data;
 
 namespace ProtfolioBackend.Controllers
 {
-    public class HomeController : Controller
+    [ApiController]
+    [Route("api/[controller]")]
+    public class HomeController : ControllerBase
     {
+        private IGitHub _github;
+        private readonly DataContext _context;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IGitHub github, DataContext context)
         {
             _logger = logger;
+            _github = github;
+            _context = context;
         }
 
-        public IActionResult Index()
+        [Route("Get")]
+        [HttpGet]
+        public async Task<ActionResult<dtoGithubReadMe>> Get()
         {
-            return View();
+            dtoGithubReadMe result = await _github.getReadMe();
+            return result;
         }
 
-        public IActionResult Privacy()
+        [Route("Getdb")]
+        [HttpGet]
+        public async Task<ActionResult<dtoGithubReadMe>> Getdb()
         {
-            return View();
+            var result = await _context.Github.FirstOrDefaultAsync();
+            return result;
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
     }
 }
