@@ -16,30 +16,22 @@ namespace ProtfolioBackend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class HomeController : ControllerBase
+    public class GithubController : ControllerBase
     {
         private IGitHub _github;
         private readonly DataContext _context;
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<GithubController> _logger;
 
-        public HomeController(ILogger<HomeController> logger, IGitHub github, DataContext context)
+        public GithubController(ILogger<GithubController> logger, IGitHub github, DataContext context)
         {
             _logger = logger;
             _github = github;
             _context = context;
         }
 
-        [Route("Get")]
+        [Route("Get/{RepoName}")]
         [HttpGet]
-        public async Task<ActionResult<dtoGithubReadMe>> Get()
-        {
-            dtoGithubReadMe result = await _github.getReadMe();
-            return result;
-        }
-
-        [Route("Getdb")]
-        [HttpGet]
-        public async Task<ActionResult<dtoGithubReadMe>> Getdb()
+        public async Task<ActionResult<dtoGithubReadMe>> Getdb(String RepoName)
         {
             var result = await _context.Github.FirstOrDefaultAsync();
             return result;
