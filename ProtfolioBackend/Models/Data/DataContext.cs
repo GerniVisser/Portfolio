@@ -13,6 +13,6 @@ namespace ProtfolioBackend.Models.Data
         {
         }
 
-        public DbSet<dtoGithubReadMe> Github { get; set; }
+        public DbSet<dtoGithubReadMe> GithubRepo { get; set; }
     }
 }

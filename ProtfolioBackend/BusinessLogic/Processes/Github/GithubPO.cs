@@ -46,5 +46,10 @@ namespace ProtfolioBackend.BusinessLogic.Processes.Github
                 throw new Exception(response.ReasonPhrase);
             }
         }
+
+        public async Task updateDB()
+        {
+
+        }
     }
 }

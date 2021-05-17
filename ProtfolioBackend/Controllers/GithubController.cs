@@ -33,7 +33,7 @@ namespace ProtfolioBackend.Controllers
         [HttpGet]
         public async Task<ActionResult<dtoGithubReadMe>> Getdb(String RepoName)
         {
-            var result = await _context.Github.FirstOrDefaultAsync();
+            var result = await _context.GithubRepo.FirstOrDefaultAsync();
             return result;
         }
 
