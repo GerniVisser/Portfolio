@@ -42,7 +42,7 @@ namespace ProtfolioBackend
             {
                 options.UseSqlite(_config.GetConnectionString("DefaultConnection"));
             });
-            services.AddSingleton<IGitHub, GithubPO>();
+            services.AddSingleton<IGitHubUser, GithubPO>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

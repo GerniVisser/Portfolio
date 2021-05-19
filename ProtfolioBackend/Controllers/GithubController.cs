@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using ProtfolioBackend.BusinessLogic.Processes.Github;
 using ProtfolioBackend.Models.data;
 using ProtfolioBackend.Models.Data;
+using ProtfolioBackend.Models.Data.Entities;
 
 namespace ProtfolioBackend.Controllers
 {
@@ -18,22 +19,22 @@ namespace ProtfolioBackend.Controllers
     [Route("api/[controller]")]
     public class GithubController : ControllerBase
     {
-        private IGitHub _github;
+        private IGitHubUser _github;
         private readonly DataContext _context;
         private readonly ILogger<GithubController> _logger;
 
-        public GithubController(ILogger<GithubController> logger, IGitHub github, DataContext context)
+        public GithubController(ILogger<GithubController> logger, IGitHubUser github, DataContext context)
         {
             _logger = logger;
             _github = github;
             _context = context;
         }
 
-        [Route("Get/{RepoName}")]
+        [Route("Get/{User}")]
         [HttpGet]
-        public async Task<ActionResult<dtoGithubReadMe>> Getdb(String RepoName)
+        public async Task<ActionResult<GithubUser>> Getdb(String User)
         {
-            var result = await _context.GithubRepo.FirstOrDefaultAsync();
+            var result = await _context.GithubUsers.FirstOrDefaultAsync();
             return result;
         }
 

@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ProtfolioBackend.Models.data;
+using ProtfolioBackend.Models.Data.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +13,7 @@ namespace ProtfolioBackend.Models.Data
         {
         }
 
-        public DbSet<dtoGithubReadMe> GithubRepo { get; set; }
+        public DbSet<GithubUser> GithubUsers { get; set; }
+        public DbSet<GithubRepo> GithubRepos { get; set; }
     }
 }

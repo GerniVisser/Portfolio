@@ -2,6 +2,7 @@
 using ProtfolioBackend.BusinessLogic.Interfaces;
 using ProtfolioBackend.Models.data;
 using ProtfolioBackend.Models.Data;
+using ProtfolioBackend.Models.Data.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,26 +10,26 @@ using System.Threading.Tasks;
 
 namespace ProtfolioBackend.BusinessLogic.Objects.Github
 {
-    public class GithubBO : IReadMe
+    public class GithubUserBO : IUsers
     {
         private readonly DataContext _context;
 
-        public GithubBO(DataContext context)
+        public GithubUserBO(DataContext context)
         {
             _context = context;
         }
 
-        public async Task<dtoGithubReadMe> GetRepoReadMeByIdAsync(int id)
+        public async Task<GithubUser> GetGithubUserById(int id)
         {
-            return await _context.GithubRepo.FindAsync(id);
+            return await _context.GithubUsers.FindAsync(id);
         }
 
-        public async Task<IEnumerable<dtoGithubReadMe>> GetAllRepoReadMeAsync()
+        public async Task<IEnumerable<GithubUser>> GetAllGithubUsersAsync()
         {
-            return await _context.GithubRepo.ToListAsync();
+            return await _context.GithubUsers.ToListAsync();
         }
 
-        public void Update(dtoGithubReadMe repo)
+        public void Update(GithubUser repo)
         {
             throw new NotImplementedException();
         }
