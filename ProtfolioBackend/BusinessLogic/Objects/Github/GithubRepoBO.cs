@@ -18,9 +18,9 @@ namespace ProtfolioBackend.BusinessLogic.Objects.Github
             _context = context;
         }
 
-        public async Task<GithubRepo> GetGithubRepoById(int id)
+        public async Task<GithubRepo> GetGithubRepoByName(string name)
         {
-            return await _context.GithubRepos.FindAsync(id);
+            return await _context.GithubRepos.SingleOrDefaultAsync(x => x.Name == name);
         }
 
         public async Task<IEnumerable<GithubRepo>> GetAllGithubReposByUserIdAsync(int userId)
@@ -30,7 +30,7 @@ namespace ProtfolioBackend.BusinessLogic.Objects.Github
 
         public void Update(GithubRepo repo)
         {
-            throw new NotImplementedException();
+            _context.Entry(repo).State = EntityState.Modified;
         }
 
         public async Task<bool> SaveAllAsync()

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace ProtfolioBackend.BusinessLogic.Interfaces
 {
-    interface IRepos
+    public interface IRepos
     {
-        Task<GithubRepo> GetGithubRepoById(int id);
+        Task<GithubRepo> GetGithubRepoByName(string name);
         Task<IEnumerable<GithubRepo>> GetAllGithubReposByUserIdAsync(int userId);
         void Update(GithubRepo repo);
         Task<bool> SaveAllAsync();

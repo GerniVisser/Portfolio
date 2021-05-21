@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using ProtfolioBackend.BusinessLogic.Processes.Github;
-using ProtfolioBackend.Models.data;
+using ProtfolioBackend.Models.dto;
 using ProtfolioBackend.Models.Data;
 using ProtfolioBackend.Models.Data.Entities;
 
@@ -19,23 +19,28 @@ namespace ProtfolioBackend.Controllers
     [Route("api/[controller]")]
     public class GithubController : ControllerBase
     {
-        private IGitHubUser _github;
-        private readonly DataContext _context;
+        private IGitHub _github;
         private readonly ILogger<GithubController> _logger;
 
-        public GithubController(ILogger<GithubController> logger, IGitHubUser github, DataContext context)
+        public GithubController(ILogger<GithubController> logger, IGitHub github)
         {
             _logger = logger;
             _github = github;
-            _context = context;
         }
 
-        [Route("Get/{User}")]
+       /* [Route("Get/{User}")]
         [HttpGet]
         public async Task<ActionResult<GithubUser>> Getdb(String User)
         {
             var result = await _context.GithubUsers.FirstOrDefaultAsync();
             return result;
+        }*/
+
+        [Route("Test")]
+        [HttpGet]
+        public async Task Getdb1()
+        {
+            await _github.updateDB();
         }
 
     }

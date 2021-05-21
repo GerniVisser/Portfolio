@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using Hangfire;
+using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -9,8 +12,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ProtfolioBackend.BusinessLogic.Interfaces;
+using ProtfolioBackend.BusinessLogic.Objects.Github;
 using ProtfolioBackend.BusinessLogic.Processes.Github;
 using ProtfolioBackend.Models.Data;
+using ProtfolioBackend.Helpers;
 
 namespace ProtfolioBackend
 {
@@ -42,7 +48,20 @@ namespace ProtfolioBackend
             {
                 options.UseSqlite(_config.GetConnectionString("DefaultConnection"));
             });
-            services.AddSingleton<IGitHubUser, GithubPO>();
+
+            services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
+            services.AddScoped<IGitHub, GithubPO>();
+
+            services.AddScoped<IUsers, GithubUserBO>();
+            services.AddScoped<IRepos, GithubRepoBO>();
+
+            services.AddHangfire(configuration => configuration
+            .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+            .UseSimpleAssemblyNameTypeSerializer()
+            .UseRecommendedSerializerSettings()
+            .UseMemoryStorage());
+
+            services.AddHangfireServer();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
