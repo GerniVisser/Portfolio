@@ -20,6 +20,7 @@ namespace ProtfolioBackend.BusinessLogic.Processes.Github
 {
     public interface IGitHub
     {
+        void updateSceduler(string timeInterval);
         Task<IEnumerable<dtoGithubRepo>> getReposData(string user);
         Task<dtoGithubReadMe> getReadMeData(string user, string repo);
         Task<GithubUser> getUserData(GithubUser user);
@@ -32,15 +33,18 @@ namespace ProtfolioBackend.BusinessLogic.Processes.Github
         private readonly IHttpClientFactory _clientFactory;
         private readonly IMapper _mapper;
         private readonly IUsers _users;
-        private readonly IRepos _repos;
 
-        public GithubPO(IHttpClientFactory clientFactory, IMapper mapper, IUsers users, IRepos repos)
+        public GithubPO(IHttpClientFactory clientFactory, IMapper mapper, IUsers users)
         {
             _clientFactory = clientFactory;
             _mapper = mapper;
             _users = users;
-            _repos = repos;
-            RecurringJob.AddOrUpdate(() => System.Diagnostics.Debug.WriteLine("HIT"), Cron.Minutely);
+            this.updateSceduler(Cron.Minutely());
+        }
+
+        public void updateSceduler(string timeInterval)
+        {
+            RecurringJob.AddOrUpdate(() => updateDB(), timeInterval);
         }
 
         public async Task<IEnumerable<dtoGithubRepo>> getReposData(string user)
@@ -93,39 +97,27 @@ namespace ProtfolioBackend.BusinessLogic.Processes.Github
             IEnumerable<dtoGithubRepo> NewdtoRepos = await getReposData(User.UserName);
             ICollection<dtoGithubRepoContent> reposEntity = _mapper.Map<ICollection<dtoGithubRepoContent>>(NewdtoRepos);
 
-            List<GithubRepo> NewRepos = new List<GithubRepo>();
-            IEnumerable<GithubRepo> OldRepos = await _repos.GetAllGithubReposByUserIdAsync(User.Id);
-
             User.Repo.Clear();
 
             foreach (dtoGithubRepoContent repoEntity in reposEntity)
             {
-                repoEntity.OwnerId = User.Id;
-
                 try
                 {
-                    dtoGithubReadMe readme = await getReadMeData(User.UserName, repoEntity.Name);
+                    var readme = await getReadMeData(User.UserName, repoEntity.Name);
 
-                    repoEntity.Content = readme.Content;
-                    repoEntity.Url = readme.Url;
+                    _mapper.Map(readme, repoEntity);
 
-                    
-                }
-                catch
-                {
-                    repoEntity.Content = "";
-                    repoEntity.Url = "";
-                }
-                finally
-                {
                     GithubRepo newGithubRepo = _mapper.Map<GithubRepo>(repoEntity);
                     User.Repo.Add(newGithubRepo);
                 }
+                catch
+                {
+                    
+                }
             }
-
             return User;
-
         }
+
         public async Task updateUser(GithubUser user)
         {
             _users.Update(await getUserData(user));

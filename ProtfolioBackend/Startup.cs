@@ -53,7 +53,6 @@ namespace ProtfolioBackend
             services.AddScoped<IGitHub, GithubPO>();
 
             services.AddScoped<IUsers, GithubUserBO>();
-            services.AddScoped<IRepos, GithubRepoBO>();
 
             services.AddHangfire(configuration => configuration
             .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)

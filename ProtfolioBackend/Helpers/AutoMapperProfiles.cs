@@ -15,9 +15,12 @@ namespace ProtfolioBackend.Helpers
             CreateMap<GithubUser, dtoGithubUser>();
             CreateMap<GithubUser, dtoGithubUserRepos>();
             CreateMap<dtoGithubUserRepos, GithubUser>();
-            CreateMap<dtoGithubRepo, dtoGithubRepoContent>();
+
+            CreateMap<dtoGithubRepo, dtoGithubRepoContent>()
+                .ForMember(dest => dest.GithubId, opt => opt.MapFrom(src => src.Id));
 
             CreateMap<dtoGithubRepoContent, GithubRepo>();
+            CreateMap<dtoGithubReadMe,dtoGithubRepoContent>();
         }
     }
 }

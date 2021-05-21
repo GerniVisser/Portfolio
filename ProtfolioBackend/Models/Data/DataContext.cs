@@ -14,6 +14,5 @@ namespace ProtfolioBackend.Models.Data
         }
 
         public DbSet<GithubUser> GithubUsers { get; set; }
-        public DbSet<GithubRepo> GithubRepos { get; set; }
     }
 }
