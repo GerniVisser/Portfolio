@@ -17,6 +17,7 @@ using ProtfolioBackend.BusinessLogic.Objects.Github;
 using ProtfolioBackend.BusinessLogic.Processes.Github;
 using ProtfolioBackend.Models.Data;
 using ProtfolioBackend.Helpers;
+using ProtfolioBackend.Extentions;
 
 namespace ProtfolioBackend
 {
@@ -33,6 +34,7 @@ namespace ProtfolioBackend
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAplicationServices(_config);
             services.AddControllers();
             services.AddHttpClient();
             services.AddCors(options =>
@@ -44,23 +46,7 @@ namespace ProtfolioBackend
                         .AllowAnyHeader()
                         .AllowCredentials());
                 });
-            services.AddDbContext<DataContext>(options =>
-            {
-                options.UseSqlite(_config.GetConnectionString("DefaultConnection"));
-            });
-
-            services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
-            services.AddScoped<IGitHub, GithubPO>();
-
-            services.AddScoped<IUsers, GithubUserBO>();
-
-            services.AddHangfire(configuration => configuration
-            .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
-            .UseSimpleAssemblyNameTypeSerializer()
-            .UseRecommendedSerializerSettings()
-            .UseMemoryStorage());
-
-            services.AddHangfireServer();
+           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

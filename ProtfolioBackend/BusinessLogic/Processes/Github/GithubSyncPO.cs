@@ -28,13 +28,13 @@ namespace ProtfolioBackend.BusinessLogic.Processes.Github
         Task updateDB();
     }
 
-    public class GithubPO : IGitHub
+    public class GithubSyncPO : IGitHub
     {
         private readonly IHttpClientFactory _clientFactory;
         private readonly IMapper _mapper;
         private readonly IUsers _users;
 
-        public GithubPO(IHttpClientFactory clientFactory, IMapper mapper, IUsers users)
+        public GithubSyncPO(IHttpClientFactory clientFactory, IMapper mapper, IUsers users)
         {
             _clientFactory = clientFactory;
             _mapper = mapper;

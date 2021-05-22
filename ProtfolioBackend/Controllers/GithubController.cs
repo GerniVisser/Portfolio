@@ -19,29 +19,32 @@ namespace ProtfolioBackend.Controllers
     [Route("api/[controller]")]
     public class GithubController : ControllerBase
     {
-        private IGitHub _github;
         private readonly ILogger<GithubController> _logger;
+        private readonly DataContext _context;
 
-        public GithubController(ILogger<GithubController> logger, IGitHub github)
+        public GithubController(ILogger<GithubController> logger, DataContext context)
         {
             _logger = logger;
-            _github = github;
+            _context = context;
         }
 
-       /* [Route("Get/{User}")]
+        [Route("Get/{User}")]
         [HttpGet]
-        public async Task<ActionResult<GithubUser>> Getdb(String User)
+        public async Task<ActionResult<GithubUser>> GetUser(String username)
         {
-            var result = await _context.GithubUsers.FirstOrDefaultAsync();
+            var result = await _context.GithubUsers.Where(x => x.UserName == username).FirstOrDefaultAsync();
+            return result;
+        }
+
+      /*  [Route("Get/{User}")]
+        [HttpGet]
+        public async Task<ActionResult<GithubRepo>> Getdb(String username, String reponame)
+        {
+            var user = await _context.GithubUsers.Where(x => x.UserName == username).FirstOrDefaultAsync();
             return result;
         }*/
 
-        [Route("Test")]
-        [HttpGet]
-        public async Task Getdb1()
-        {
-            await _github.updateDB();
-        }
+
 
     }
 }
