@@ -39,11 +39,11 @@ namespace ProtfolioBackend.Controllers
             return Ok(result);
         }
 
-        [Route("Repos/RepoData")]
+        [Route("Repos/RepoData/{username}/{reponame}")]
         [HttpGet]
-        public async Task<ActionResult<GithubRepo>> GetRepoData([FromBody] dtoSelectRepo selectRepo)
+        public async Task<ActionResult<GithubRepo>> GetRepoData(string username, string reponame)
         {
-            var result = await _users.GetRepoContentAsync(selectRepo.Username, selectRepo.Reponame);
+            var result = await _users.GetRepoContentAsync(username, reponame);
             return Ok(result);
         }
     }
