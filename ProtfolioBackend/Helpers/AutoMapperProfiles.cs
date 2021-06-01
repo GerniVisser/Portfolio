@@ -13,7 +13,9 @@ namespace ProtfolioBackend.Helpers
         public AutoMapperProfiles()
         {
             CreateMap<GithubUser, dtoGithubUser>();
+
             CreateMap<GithubUser, dtoGithubUserRepos>();
+
             CreateMap<dtoGithubUserRepos, GithubUser>();
 
             CreateMap<dtoGithubRepo, dtoGithubRepoContent>()
@@ -21,6 +23,9 @@ namespace ProtfolioBackend.Helpers
 
             CreateMap<dtoGithubRepoContent, GithubRepo>();
             CreateMap<dtoGithubReadMe,dtoGithubRepoContent>();
+
+            CreateMap<GithubRepo, dtoGithubRepo>();
+            CreateMap<GithubRepo, dtoGithubRepoContent>();
         }
     }
 }

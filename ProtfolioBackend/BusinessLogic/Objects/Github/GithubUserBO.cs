@@ -54,5 +54,32 @@ namespace ProtfolioBackend.BusinessLogic.Objects.Github
         {
             return await _context.SaveChangesAsync() > 0;
         }
+
+        public async Task<IEnumerable<dtoGithubRepo>> GetRepoContentAsync(string username)
+        {
+            var userRepos = await _context.GithubUsers
+                .Where(x => x.UserName == username)
+                .Include(y => y.Repo)
+                .Select(z => z.Repo)
+                .FirstOrDefaultAsync();
+
+            return _mapper.Map<IEnumerable<dtoGithubRepo>>(userRepos);
+
+        }
+
+        public async Task<dtoGithubRepoContent> GetRepoContentAsync(string username, string reponame)
+        {
+            var userRepos = await _context.GithubUsers
+                .Where(x => x.UserName == username)
+                .Include(y => y.Repo)
+                .Select(z => z.Repo)
+                .FirstOrDefaultAsync();
+
+            var res = userRepos
+                .Where(a => a.Name == reponame)
+                .FirstOrDefault();
+
+            return _mapper.Map<dtoGithubRepoContent>(res);
+        }
     }
 }

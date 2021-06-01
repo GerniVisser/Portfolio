@@ -34,7 +34,7 @@ namespace ProtfolioBackend.Extentions
 
             services.AddHangfireServer();
 
-            services.AddScoped<IGitHub, GithubSyncPO>();
+            services.AddScoped<IGitHubSync, GithubSyncPO>();
 
             services.AddScoped<IUsers, GithubUserBO>();
 

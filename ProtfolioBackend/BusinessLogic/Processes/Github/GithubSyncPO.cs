@@ -18,7 +18,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ProtfolioBackend.BusinessLogic.Processes.Github
 {
-    public interface IGitHub
+    public interface IGitHubSync
     {
         void updateSceduler(string timeInterval);
         Task<IEnumerable<dtoGithubRepo>> getReposData(string user);
@@ -28,7 +28,7 @@ namespace ProtfolioBackend.BusinessLogic.Processes.Github
         Task updateDB();
     }
 
-    public class GithubSyncPO : IGitHub
+    public class GithubSyncPO : IGitHubSync
     {
         private readonly IHttpClientFactory _clientFactory;
         private readonly IMapper _mapper;

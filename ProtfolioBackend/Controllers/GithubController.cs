@@ -12,6 +12,9 @@ using ProtfolioBackend.BusinessLogic.Processes.Github;
 using ProtfolioBackend.Models.dto;
 using ProtfolioBackend.Models.Data;
 using ProtfolioBackend.Models.Data.Entities;
+using ProtfolioBackend.BusinessLogic.Objects.Github;
+using ProtfolioBackend.BusinessLogic.Interfaces;
+using ProtfolioBackend.Models.dto.dtoEndpointsEntries;
 
 namespace ProtfolioBackend.Controllers
 {
@@ -20,31 +23,28 @@ namespace ProtfolioBackend.Controllers
     public class GithubController : ControllerBase
     {
         private readonly ILogger<GithubController> _logger;
-        private readonly DataContext _context;
+        private readonly IUsers _users;
 
-        public GithubController(ILogger<GithubController> logger, DataContext context)
+        public GithubController(ILogger<GithubController> logger, IUsers users)
         {
             _logger = logger;
-            _context = context;
+            _users = users;
         }
 
-        [Route("Get/{User}")]
+        [Route("Repos/Summary/{username}")]
         [HttpGet]
-        public async Task<ActionResult<GithubUser>> GetUser(String username)
+        public async Task<ActionResult<IEnumerable<dtoGithubRepo>>> GetUserReposSummary(String username)
         {
-            var result = await _context.GithubUsers.Where(x => x.UserName == username).FirstOrDefaultAsync();
-            return result;
+            var result = await _users.GetRepoContentAsync(username);
+            return Ok(result);
         }
 
-      /*  [Route("Get/{User}")]
+        [Route("Repos/RepoData")]
         [HttpGet]
-        public async Task<ActionResult<GithubRepo>> Getdb(String username, String reponame)
+        public async Task<ActionResult<GithubRepo>> GetRepoData([FromBody] dtoSelectRepo selectRepo)
         {
-            var user = await _context.GithubUsers.Where(x => x.UserName == username).FirstOrDefaultAsync();
-            return result;
-        }*/
-
-
-
+            var result = await _users.GetRepoContentAsync(selectRepo.Username, selectRepo.Reponame);
+            return Ok(result);
+        }
     }
 }
