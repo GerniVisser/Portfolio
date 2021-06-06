@@ -15,12 +15,14 @@ using AutoMapper;
 using ProtfolioBackend.BusinessLogic.Interfaces;
 using ProtfolioBackend.Models.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
+using System.Threading;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ProtfolioBackend.BusinessLogic.Processes.Github
 {
     public interface IGitHubSync
     {
-        void updateSceduler(string timeInterval);
         Task<IEnumerable<dtoGithubRepo>> getReposData(string user);
         Task<dtoGithubReadMe> getReadMeData(string user, string repo);
         Task<GithubUser> getUserData(GithubUser user);
@@ -28,23 +30,38 @@ namespace ProtfolioBackend.BusinessLogic.Processes.Github
         Task updateDB();
     }
 
-    public class GithubSyncPO : IGitHubSync
+    public class GithubSyncPO : BackgroundService, IGitHubSync
     {
         private readonly IHttpClientFactory _clientFactory;
         private readonly IMapper _mapper;
         private readonly IUsers _users;
+        private readonly IServiceScopeFactory _scopeFactory;
 
-        public GithubSyncPO(IHttpClientFactory clientFactory, IMapper mapper, IUsers users)
+        public GithubSyncPO(IHttpClientFactory clientFactory, IMapper mapper, IServiceScopeFactory scopeFactory)
         {
             _clientFactory = clientFactory;
             _mapper = mapper;
-            _users = users;
-            this.updateSceduler(Cron.Minutely());
+            _scopeFactory = scopeFactory;
+            _users = _scopeFactory.CreateScope().ServiceProvider.GetRequiredService<IUsers>();
         }
 
-        public void updateSceduler(string timeInterval)
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            RecurringJob.AddOrUpdate(() => updateDB(), timeInterval);
+            while (!stoppingToken.IsCancellationRequested)
+            {
+                try
+                {
+                    System.Diagnostics.Debug.WriteLine("Task running ..");
+                    await updateDB();
+                    await Task.Delay(1000 * 20, stoppingToken);
+                }
+                catch (OperationCanceledException)
+                {
+                    // catch the cancellation exception
+                    // to stop execution
+                    return;
+                }
+            }
         }
 
         public async Task<IEnumerable<dtoGithubRepo>> getReposData(string user)
