@@ -1,6 +1,4 @@
-﻿using Hangfire;
-using Hangfire.MemoryStorage;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ProtfolioBackend.BusinessLogic.Interfaces;
@@ -25,14 +23,6 @@ namespace ProtfolioBackend.Extentions
             });
 
             services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
-
-            services.AddHangfire(configuration => configuration
-            .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
-            .UseSimpleAssemblyNameTypeSerializer()
-            .UseRecommendedSerializerSettings()
-            .UseMemoryStorage());
-
-            services.AddHangfireServer();
 
             services.AddScoped<IGitHubSync, GithubSyncPO>();
 

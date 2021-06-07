@@ -1,5 +1,4 @@
-﻿using Hangfire;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using ProtfolioBackend.BusinessLogic.Objects.Github;
 using ProtfolioBackend.Controllers;
@@ -42,6 +41,7 @@ namespace ProtfolioBackend.BusinessLogic.Processes.Github
             _clientFactory = clientFactory;
             _mapper = mapper;
             _scopeFactory = scopeFactory;
+            // Creats instances of IUser for every call as DBContext is a scoped Lifacycle.
             _users = _scopeFactory.CreateScope().ServiceProvider.GetRequiredService<IUsers>();
         }
 
@@ -53,12 +53,11 @@ namespace ProtfolioBackend.BusinessLogic.Processes.Github
                 {
                     System.Diagnostics.Debug.WriteLine("Task running ..");
                     await updateDB();
-                    await Task.Delay(1000 * 20, stoppingToken);
+                    await Task.Delay(1000 * 60, stoppingToken);
                 }
                 catch (OperationCanceledException)
                 {
-                    // catch the cancellation exception
-                    // to stop execution
+                    System.Diagnostics.Debug.WriteLine("Failed to run sertvice....");
                     return;
                 }
             }
