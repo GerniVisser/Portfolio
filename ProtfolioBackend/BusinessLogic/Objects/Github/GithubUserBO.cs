@@ -55,7 +55,7 @@ namespace ProtfolioBackend.BusinessLogic.Objects.Github
             return await _context.SaveChangesAsync() > 0;
         }
 
-        public async Task<IEnumerable<dtoGithubRepo>> GetRepoContentAsync(string username)
+        public async Task<IEnumerable<dtoGithubRepo>> GetUserReposAsync(string username)
         {
             var userRepos = await _context.GithubUsers
                 .Where(x => x.UserName == username)

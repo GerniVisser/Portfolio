@@ -35,7 +35,7 @@ namespace ProtfolioBackend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<dtoGithubRepo>>> GetUserReposSummary(String username)
         {
-            var result = await _users.GetRepoContentAsync(username);
+            var result = await _users.GetUserReposAsync(username);
             return Ok(result);
         }
 
