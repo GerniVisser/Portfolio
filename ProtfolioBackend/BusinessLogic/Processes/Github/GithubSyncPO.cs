@@ -190,7 +190,7 @@ namespace ProtfolioBackend.BusinessLogic.Processes.Github
             if(data != null)
             {
                 var addRemoveData = addRemoveRepos(user, data);
-                var updatedContent = updateRepoContent(user, _mapper.Map<IEnumerable<dtoGithubRepoContent>>(addRemoveData.Repo));
+                var updatedContent = updateRepoContent(addRemoveData, data);
                 _users.Update(updatedContent);
             }
 

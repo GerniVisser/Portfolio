@@ -15,7 +15,9 @@ namespace ProtfolioBackend.Extentions
             if (x.GithubId == y.GithubId
                 && x.Name == y.Name
                 && x.Content == y.Content
-                && x.Url == y.Url)
+                && x.Url == y.Url
+                && x.Created_at == y.Created_at
+                && x.Updated_at == y.Updated_at)
                 return true;
 
             return false;
@@ -25,7 +27,9 @@ namespace ProtfolioBackend.Extentions
         {
             return obj.Content.GetHashCode() +
                 obj.Name.GetHashCode() +
-                obj.Url.GetHashCode();
+                obj.Url.GetHashCode() +
+                obj.Created_at.GetHashCode()+
+                obj.Updated_at.GetHashCode();
         }
     }
 }

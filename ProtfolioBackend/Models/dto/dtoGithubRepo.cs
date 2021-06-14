@@ -14,6 +14,8 @@ namespace ProtfolioBackend.Models.dto
         public string Name { get; set; }
         public int OwnerId { get; set; }
         public string html_url { get; set; }
+        public DateTime Created_at { get; set; }
+        public DateTime Updated_at { get; set; }
     }
 
 }

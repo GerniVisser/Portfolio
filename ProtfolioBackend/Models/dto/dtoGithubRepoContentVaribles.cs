@@ -10,6 +10,8 @@ namespace ProtfolioBackend.Models.dto
         public string Name { get; set; }
         public string Url { get; set; }
         public string Content { get; set; }
+        public DateTime Created_at { get; set; }
+        public DateTime Updated_at { get; set; }
         public int GithubId { get; set; }
     }
 }
