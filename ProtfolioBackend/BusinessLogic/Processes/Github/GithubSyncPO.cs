@@ -25,7 +25,7 @@ namespace ProtfolioBackend.BusinessLogic.Processes.Github
     {
         Task<IEnumerable<dtoGithubRepo>> getReposData(string user);
         Task<dtoGithubReadMe> getReadMeData(string user, string repo);
-        Task<IEnumerable<dtoGithubRepoContent>> getUserDataFromGithub(GithubUser user);
+        Task<IEnumerable<dtoGithubRepoContent>> getUserRepoDataFromGithub(GithubUser user);
         GithubUser addRemoveRepos(GithubUser user, IEnumerable<dtoGithubRepoContent> githubdtoList);
         GithubUser updateRepoContent(GithubUser user, IEnumerable<dtoGithubRepoContent> githubdtoList);
         Task updateUser(GithubUser user);
@@ -111,7 +111,7 @@ namespace ProtfolioBackend.BusinessLogic.Processes.Github
         }
         
 
-        public async Task<IEnumerable<dtoGithubRepoContent>> getUserDataFromGithub(GithubUser user)
+        public async Task<IEnumerable<dtoGithubRepoContent>> getUserRepoDataFromGithub(GithubUser user)
         {
             IEnumerable<dtoGithubRepo> NewdtoRepos = await getReposData(user.UserName);
             IEnumerable<dtoGithubRepoContent> reposEntity = _mapper.Map<IEnumerable<dtoGithubRepoContent>>(NewdtoRepos);
@@ -130,26 +130,27 @@ namespace ProtfolioBackend.BusinessLogic.Processes.Github
                 }
                 catch
                 {
+                    // NO readme file existis for this repo 
                 }
             }
 
             return finalRepoEntity;
         }
 
-        public GithubUser addRemoveRepos(GithubUser user, IEnumerable<dtoGithubRepoContent> githubdtoList)
+        public GithubUser addRemoveRepos(GithubUser user, IEnumerable<dtoGithubRepoContent> githubContent)
         {
-            IEnumerable<int> dbRepos = user.Repo.Select(x => x.GithubId).ToList();
-            IEnumerable<int> githubRepos = githubdtoList.Select(x => x.GithubId).ToList();
+            IEnumerable<int> dbReposIds = user.Repo.Select(x => x.GithubId).ToList();
+            IEnumerable<int> githubReposIds = githubContent.Select(x => x.GithubId).ToList();
             // If this check returns true a repo has been added or removed 
-            if (dbRepos.Count() != githubRepos.Count())
+            if (dbReposIds.Count() != githubReposIds.Count())
             {
-                IEnumerable<int> addRepoList = githubRepos.Except(dbRepos);
-                IEnumerable<int> removeRepoList = dbRepos.Except(githubRepos);
+                IEnumerable<int> addReposList = githubReposIds.Except(dbReposIds);
+                IEnumerable<int> removeRepoList = dbReposIds.Except(githubReposIds);
 
-                foreach(var githubID in addRepoList)
+                foreach(var githubID in addReposList)
                 {
-                    var map = _mapper.Map<GithubRepo>(githubdtoList.Where(x => x.GithubId == githubID).FirstOrDefault());
-                    user.Repo.Add(map);
+                    var resRepo = _mapper.Map<GithubRepo>(githubContent.Where(x => x.GithubId == githubID).FirstOrDefault());
+                    user.Repo.Add(resRepo);
                 }
 
                 foreach (var githubID in removeRepoList)
@@ -157,24 +158,24 @@ namespace ProtfolioBackend.BusinessLogic.Processes.Github
                     user.Repo.Remove(user.Repo.Where(x => x.GithubId == githubID).FirstOrDefault());
                 }
             }
-             return user;
+            return user;
         }
 
-        public GithubUser updateRepoContent(GithubUser user, IEnumerable<dtoGithubRepoContent> githubdtoList)
+        public GithubUser updateRepoContent(GithubUser user, IEnumerable<dtoGithubRepoContent> githubContent)
         {
             // Map repo data to dtoGithubContent to exclude Id, Parent ext
-            IEnumerable<dtoGithubRepoContentVaribles> githubList = _mapper.Map<IEnumerable<dtoGithubRepoContentVaribles>>(githubdtoList);
-            IEnumerable<dtoGithubRepoContentVaribles> dbdtoList = _mapper.Map<IEnumerable<dtoGithubRepoContentVaribles>>(user.Repo);
+            IEnumerable<dtoGithubRepoContentVaribles> githubList = _mapper.Map<IEnumerable<dtoGithubRepoContentVaribles>>(githubContent);
+            IEnumerable<dtoGithubRepoContentVaribles> dbList = _mapper.Map<IEnumerable<dtoGithubRepoContentVaribles>>(user.Repo);
 
             // IF true some of the records differ and update needs to happen
-            if(!githubList.OrderBy(x => x.GithubId).SequenceEqual(dbdtoList.OrderBy(x => x.GithubId), new ContentComparer()))
+            if(!githubList.OrderBy(x => x.GithubId).SequenceEqual(dbList.OrderBy(x => x.GithubId), new ContentComparer()))
             {
-                IEnumerable<dtoGithubRepoContentVaribles> reposToUpdate = githubList.Except(dbdtoList, new ContentComparer()).ToList();
+                IEnumerable<dtoGithubRepoContentVaribles> reposToUpdate = githubList.Except(dbList, new ContentComparer()).ToList();
 
                 foreach(var repo in reposToUpdate)
                 {
-                    var dbrepo = user.Repo.Where(x => x.GithubId == repo.GithubId).FirstOrDefault();
-                    _mapper.Map(repo, dbrepo);
+                    var resRepo = user.Repo.Where(x => x.GithubId == repo.GithubId).FirstOrDefault();
+                    _mapper.Map(repo, resRepo);
                 }
             }
 
@@ -183,7 +184,7 @@ namespace ProtfolioBackend.BusinessLogic.Processes.Github
 
         public async Task updateUser(GithubUser user)
         {
-            var data = await getUserDataFromGithub(user);
+            var data = await getUserRepoDataFromGithub(user);
 
             var addRemoveData = addRemoveRepos(user, data);
             var updatedContent = updateRepoContent(user, _mapper.Map<IEnumerable<dtoGithubRepoContent>>(addRemoveData.Repo));
@@ -194,6 +195,7 @@ namespace ProtfolioBackend.BusinessLogic.Processes.Github
         public async Task updateDB()
         {
             IEnumerable<GithubUser> users = await _users.GetAllGithubUsersAsync();
+
             foreach(GithubUser user in users)
             {
                 await updateUser(user);
@@ -201,7 +203,5 @@ namespace ProtfolioBackend.BusinessLogic.Processes.Github
 
             await _users.SaveAllAsync();
         }
-
-        
     }
 }
