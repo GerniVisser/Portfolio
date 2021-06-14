@@ -8,7 +8,6 @@ namespace ProtfolioBackend.Models.dto
     public class dtoGithubReadMe
     {
         public int Size { get; set; }
-        public string Url { get; set; }
         public string Content { get; set; }
         public string Encoding { get; set; }
     }

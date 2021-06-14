@@ -15,22 +15,23 @@ namespace ProtfolioBackend.Helpers
             CreateMap<GithubUser, dtoGithubUser>();
 
             CreateMap<GithubUser, dtoGithubUserRepos>();
-
             CreateMap<dtoGithubUserRepos, GithubUser>();
 
-            CreateMap<dtoGithubRepo, dtoGithubRepoContent>()
-                .ForMember(dest => dest.GithubId, opt => opt.MapFrom(src => src.Id));
-
             CreateMap<dtoGithubRepoContent, GithubRepo>();
+            CreateMap<GithubRepo, dtoGithubRepoContent>();
+
             CreateMap<dtoGithubReadMe,dtoGithubRepoContent>();
 
             CreateMap<GithubRepo, dtoGithubRepo>();
-            CreateMap<GithubRepo, dtoGithubRepoContent>();
 
             CreateMap<GithubRepo, dtoGithubRepoContentVaribles>();
             CreateMap<dtoGithubRepoContentVaribles, GithubRepo>();
 
             CreateMap<dtoGithubRepoContent, dtoGithubRepoContentVaribles>();
+
+            CreateMap<dtoGithubRepo, dtoGithubRepoContent>()
+                .ForMember(dest => dest.GithubId, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Url, opt => opt.MapFrom(src => src.html_url));
 
         }
     }

@@ -74,6 +74,7 @@ namespace ProtfolioBackend.BusinessLogic.Processes.Github
             request.Headers.Add("User-Agent", "HttpClientFactory-Sample");
 
             var client = _clientFactory.CreateClient();
+            //client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", "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");
 
             var response = await client.SendAsync(request);
 
@@ -113,8 +114,8 @@ namespace ProtfolioBackend.BusinessLogic.Processes.Github
 
         public async Task<IEnumerable<dtoGithubRepoContent>> getUserRepoDataFromGithub(GithubUser user)
         {
-            IEnumerable<dtoGithubRepo> NewdtoRepos = await getReposData(user.UserName);
-            IEnumerable<dtoGithubRepoContent> reposEntity = _mapper.Map<IEnumerable<dtoGithubRepoContent>>(NewdtoRepos);
+            IEnumerable<dtoGithubRepo> newdtoRepos = await getReposData(user.UserName);
+            IEnumerable<dtoGithubRepoContent> reposEntity = _mapper.Map<IEnumerable<dtoGithubRepoContent>>(newdtoRepos);
 
             IList<dtoGithubRepoContent> finalRepoEntity = new List<dtoGithubRepoContent>();
 
@@ -186,10 +187,13 @@ namespace ProtfolioBackend.BusinessLogic.Processes.Github
         {
             var data = await getUserRepoDataFromGithub(user);
 
-            var addRemoveData = addRemoveRepos(user, data);
-            var updatedContent = updateRepoContent(user, _mapper.Map<IEnumerable<dtoGithubRepoContent>>(addRemoveData.Repo));
+            if(data != null)
+            {
+                var addRemoveData = addRemoveRepos(user, data);
+                var updatedContent = updateRepoContent(user, _mapper.Map<IEnumerable<dtoGithubRepoContent>>(addRemoveData.Repo));
+                _users.Update(updatedContent);
+            }
 
-            _users.Update(updatedContent);
         }
 
         public async Task updateDB()
