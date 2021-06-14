@@ -26,6 +26,12 @@ namespace ProtfolioBackend.Helpers
 
             CreateMap<GithubRepo, dtoGithubRepo>();
             CreateMap<GithubRepo, dtoGithubRepoContent>();
+
+            CreateMap<GithubRepo, dtoGithubRepoContentVaribles>();
+            CreateMap<dtoGithubRepoContentVaribles, GithubRepo>();
+
+            CreateMap<dtoGithubRepoContent, dtoGithubRepoContentVaribles>();
+
         }
     }
 }
