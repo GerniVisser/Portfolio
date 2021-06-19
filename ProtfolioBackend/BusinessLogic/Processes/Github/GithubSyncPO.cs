@@ -18,6 +18,8 @@ using Microsoft.Extensions.Hosting;
 using System.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using ProtfolioBackend.Extentions;
+using System.Net.Http.Headers;
+using Microsoft.Extensions.Configuration;
 
 namespace ProtfolioBackend.BusinessLogic.Processes.Github
 {
@@ -36,13 +38,15 @@ namespace ProtfolioBackend.BusinessLogic.Processes.Github
     {
         private readonly IHttpClientFactory _clientFactory;
         private readonly IMapper _mapper;
+        private readonly IConfiguration _config;
         private readonly IUsers _users;
         private readonly IServiceScopeFactory _scopeFactory;
 
-        public GithubSyncPO(IHttpClientFactory clientFactory, IMapper mapper, IServiceScopeFactory scopeFactory)
+        public GithubSyncPO(IHttpClientFactory clientFactory, IMapper mapper, IConfiguration config, IServiceScopeFactory scopeFactory)
         {
             _clientFactory = clientFactory;
             _mapper = mapper;
+            _config = config;
             _scopeFactory = scopeFactory;
             // Creats instances of IUser for every call as DBContext is a scoped Lifacycle.
             _users = _scopeFactory.CreateScope().ServiceProvider.GetRequiredService<IUsers>();
@@ -56,7 +60,7 @@ namespace ProtfolioBackend.BusinessLogic.Processes.Github
                 {
                     System.Diagnostics.Debug.WriteLine("Task running ..");
                     await updateDB();
-                    await Task.Delay(1000 * 300, stoppingToken);
+                    await Task.Delay(1000 * 600, stoppingToken);
                 }
                 catch (OperationCanceledException)
                 {
@@ -74,6 +78,10 @@ namespace ProtfolioBackend.BusinessLogic.Processes.Github
             request.Headers.Add("User-Agent", "HttpClientFactory-Sample");
 
             var client = _clientFactory.CreateClient();
+
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                _config.GetSection("GithubOAuth").GetSection("Token").Value);
 
             var response = await client.SendAsync(request);
 
