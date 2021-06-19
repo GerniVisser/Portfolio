@@ -74,7 +74,6 @@ namespace ProtfolioBackend.BusinessLogic.Processes.Github
             request.Headers.Add("User-Agent", "HttpClientFactory-Sample");
 
             var client = _clientFactory.CreateClient();
-            //client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", "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");
 
             var response = await client.SendAsync(request);
 
