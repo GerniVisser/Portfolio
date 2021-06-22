@@ -25,6 +25,7 @@ namespace ProtfolioBackend
             {
                 var context = services.GetRequiredService<DataContext>();
                 await context.Database.MigrateAsync();
+                await Seed.SeedUser(context);
             }
             catch(Exception ex)
             {
