@@ -5,6 +5,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\CSS\**" />
+    <Compile Remove="wwwroot\JS\**" />
+    <Compile Remove="wwwroot\lib\**" />
+    <Content Remove="wwwroot\CSS\**" />
+    <Content Remove="wwwroot\JS\**" />
+    <Content Remove="wwwroot\lib\**" />
+    <EmbeddedResource Remove="wwwroot\CSS\**" />
+    <EmbeddedResource Remove="wwwroot\JS\**" />
+    <EmbeddedResource Remove="wwwroot\lib\**" />
+    <None Remove="wwwroot\CSS\**" />
+    <None Remove="wwwroot\JS\**" />
+    <None Remove="wwwroot\lib\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
     <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
@@ -17,12 +32,6 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.7" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
     <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\CSS\" />
-    <Folder Include="wwwroot\JS\" />
-    <Folder Include="wwwroot\lib\" />
   </ItemGroup>
 
 </Project>
