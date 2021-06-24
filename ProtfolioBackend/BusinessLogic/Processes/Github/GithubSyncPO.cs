@@ -79,9 +79,9 @@ namespace ProtfolioBackend.BusinessLogic.Processes.Github
 
             var client = _clientFactory.CreateClient();
 
-            //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-            //    "Bearer",
-            //    _config.GetSection("GithubOAuth").GetSection("Token").Value);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                _config.GetSection("GithubOAuth").GetSection("Token").Value);
 
             var response = await client.SendAsync(request);
 
@@ -103,9 +103,9 @@ namespace ProtfolioBackend.BusinessLogic.Processes.Github
             request.Headers.Add("User-Agent", "HttpClientFactory-Sample");
 
             var client = _clientFactory.CreateClient();
-            //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-            //    "Bearer",
-            //    _config.GetSection("GithubOAuth").GetSection("Token").Value);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                _config.GetSection("GithubOAuth").GetSection("Token").Value);
 
             var response = await client.SendAsync(request);
 
