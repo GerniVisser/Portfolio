@@ -5,7 +5,7 @@ Web platform to host any number of web-based utilities and services with the mai
  of acting like an interactive dynamic personal curriculum vitae.
 
 
-## ⚡Demo
+## Demo
 
 Dynamic CV live at [gernivisser.com](http://gernivisser.com) hosted on [Amazone Web Services](https://aws.amazon.com)
 
@@ -34,7 +34,7 @@ Dynamic CV live at [gernivisser.com](http://gernivisser.com) hosted on [Amazone 
 - Embedded contact gateways
 
   
-## 🗺️Roadmap
+## Roadmap
 
 The goal of this project is to use this microservice architecture 
 to enable the easy deployment of any future web-based projects I 
