@@ -60,7 +60,7 @@ namespace ProtfolioBackend.BusinessLogic.Processes.Github
                 {
                     System.Diagnostics.Debug.WriteLine("Task running ..");
                     await updateDB();
-                    await Task.Delay(1000 * 600, stoppingToken);
+                    await Task.Delay(1000 * 1440, stoppingToken);
                 }
                 catch (OperationCanceledException)
                 {
